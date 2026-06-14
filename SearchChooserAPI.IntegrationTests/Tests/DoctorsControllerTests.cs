@@ -8,14 +8,6 @@ public sealed class DoctorsControllerTests : IClassFixture<SearchApiFactory>, IA
     private readonly HttpClient _client;
     private readonly JsonSerializerOptions _jsonOptions;
 
-    private static readonly string[] SeedDoctorNames =
-    [
-        "Dr. Sarah Jenkins", "Dr. John Doe", "Dr. Emily Chen",
-        "Dr. Michael Torres", "Dr. Amanda Foster", "Dr. James Whitfield",
-        "Dr. Priya Sharma", "Dr. David Kim", "Dr. Lisa Nguyen",
-        "Dr. Robert Okafor", "Dr. Margaret O'Brien", "Dr. Ahmed Hassan"
-    ];
-
     public DoctorsControllerTests(SearchApiFactory factory)
     {
         _factory = factory;
@@ -457,6 +449,28 @@ public sealed class DoctorsControllerTests : IClassFixture<SearchApiFactory>, IA
                 .AddFilter("Rating", FilterOperator.Eq, "not-a-number"),
             12);
     }
+
+    [Fact(DisplayName = "EC12: Filter with empty column name is skipped and returns all")]
+    public async Task Search_FilterWithEmptyColumnName_IsSkipped_ReturnsAll()
+    {
+        await AssertSuccessAsync(
+            new DoctorSearchRequestBuilder()
+                .AddFilter("", FilterOperator.Eq, "value"),
+            12);
+    }
+
+    [Fact(DisplayName = "EC13: Multiple filters are combined with AND logic")]
+    public async Task Filter_MultipleFilters_AreAnded()
+    {
+        var request = new DoctorSearchRequestBuilder()
+            .AddFilter("YearsOfExperience", FilterOperator.Gt, "10")
+            .AddFilter("SpecialtyName", FilterOperator.Eq, "Cardiology");
+        var data = await AssertSuccessAsync(request);
+        data.Should().NotBeEmpty();
+        data.Should().AllSatisfy(d => d.YearsOfExperience.Should().BeGreaterThan(10));
+        data.Should().AllSatisfy(d => d.SpecialtyName.Should().Be("Cardiology"));
+    }
+
 
     [Fact(DisplayName = "EC7: Very long search string handled without error")]
     public async Task VeryLongSearch_HandledGracefully()
