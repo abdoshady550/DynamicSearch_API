@@ -34,10 +34,7 @@ namespace SearchChooserAPI.Services
                 })
                 .SelectColumns(columns, request.Mode);
 
-            if (!string.IsNullOrWhiteSpace(request.Search))
-            {
-                query = query.SearchColumns(request.Search);
-            }
+                query = query.DynamicSearchAndFilter(request.Search, request.Filters);
 
             return await query.ToListAsync();
         }
