@@ -1,0 +1,6 @@
+@SearchChooserAPI_HostAddress = http://localhost:5157
+
+GET {{SearchChooserAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
