@@ -4,6 +4,7 @@ global using System.Text.Json;
 global using FluentAssertions;
 global using Microsoft.AspNetCore.Mvc.Testing;
 global using Xunit;
+global using Meccano.DynamicQuery;
 global using SearchChooserAPI.Models;
 global using SearchChooserAPI.Models.Req;
 global using SearchChooserAPI.Models.Res;

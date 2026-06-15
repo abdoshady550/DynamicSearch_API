@@ -1,4 +1,4 @@
-using SearchChooserAPI.Helper;
+using Meccano.DynamicQuery;
 
 namespace SearchChooserAPI.Models.Res
 {
@@ -7,11 +7,11 @@ namespace SearchChooserAPI.Models.Res
         [MandatoryColumn]
         public string DoctorId { get; set; } = string.Empty;
 
-        public string? DoctorName { get; set; } 
-        
-        public string? SpecialtyName { get; set; } 
-        
-        public string? Degree { get; set; } 
+        public string? DoctorName { get; set; }
+
+        public string? SpecialtyName { get; set; }
+
+        public string? Degree { get; set; }
 
         public int YearsOfExperience { get; set; }
 

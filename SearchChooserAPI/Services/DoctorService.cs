@@ -1,6 +1,6 @@
+using Meccano.DynamicQuery;
 using Microsoft.EntityFrameworkCore;
 using SearchChooserAPI.Data;
-using SearchChooserAPI.Helper;
 using SearchChooserAPI.Models.Req;
 using SearchChooserAPI.Models.Res;
 
@@ -15,11 +15,8 @@ namespace SearchChooserAPI.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<DoctorSearchResponse>> SearchDoctorsAsync(DoctorSearchRequest request)
+        public async Task<PagedResult<DoctorSearchResponse>> SearchDoctorsAsync(DoctorSearchRequest request)
         {
-            var columns = request.Columns?.Select(c => c.Trim()).ToList()
-                ?? typeof(DoctorSearchResponse).GetProperties().Select(p => p.Name).ToList();
-
             var query = _context.Doctors
                 .Select(d => new DoctorSearchResponse
                 {
@@ -32,11 +29,24 @@ namespace SearchChooserAPI.Services
                     JoinDate = d.JoinDate,
                     LastActive = d.LastActive
                 })
-                .SelectColumns(columns, request.Mode);
+                .ApplyDynamicQuery(request);
 
-                query = query.DynamicSearchAndFilter(request.Search, request.Filters);
-
-            return await query.ToListAsync();
+            var totalCount = await query.CountAsync();
+            
+            if (request.PageSize > 0){var skip = (request.PageNumber - 1) * request.PageSize;
+            
+                query = query.Skip(skip).Take(request.PageSize);}var items = await query.ToListAsync();
+            
+            return new PagedResult<DoctorSearchResponse>
+            {  
+                Items = items,
+            
+                TotalCount = totalCount,
+            
+                PageNumber = request.PageNumber,
+            
+                PageSize = request.PageSize > 0 ? request.PageSize : totalCount
+            };
         }
     }
 }
