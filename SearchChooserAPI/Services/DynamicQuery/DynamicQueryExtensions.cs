@@ -102,7 +102,7 @@ public static class DynamicQueryExtensions
         {
             if (string.IsNullOrWhiteSpace(filter.ColumnName)) continue;
 
-            var prop = typeof(TResult).GetProperty(filter.ColumnName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+            var prop = typeof(TResult).GetProperty(filter.ColumnName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (prop == null) continue;
 
             try

@@ -16,6 +16,8 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="SearchChooserAPI.IntegrationTests" />
+    <InternalsVisibleTo Include="SearchChooserAPI.Benchmarks" />
+    <InternalsVisibleTo Include="SearchChooserAPI.LoadTests" />
   </ItemGroup>
 
 </Project>

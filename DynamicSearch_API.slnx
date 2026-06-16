@@ -1,3 +1,5 @@
 <Solution>
   <Project Path="SearchChooserAPI/SearchChooserAPI.csproj" />
+  <Project Path="SearchChooserAPI.Benchmarks/SearchChooserAPI.Benchmarks.csproj" />
+  <Project Path="SearchChooserAPI.LoadTests/SearchChooserAPI.LoadTests.csproj" />
 </Solution>
