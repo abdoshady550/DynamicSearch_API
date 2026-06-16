@@ -31,7 +31,8 @@ public sealed class DoctorsControllerTests : IClassFixture<SearchApiFactory>, IA
         if (response.IsSuccessStatusCode)
         {
             var json = await response.Content.ReadAsStringAsync();
-            data = JsonSerializer.Deserialize<List<DoctorSearchResponse>>(json, _jsonOptions);
+            var paged = JsonSerializer.Deserialize<PagedResult<DoctorSearchResponse>>(json, _jsonOptions);
+            data = paged?.Items;
         }
         return (response, data);
     }

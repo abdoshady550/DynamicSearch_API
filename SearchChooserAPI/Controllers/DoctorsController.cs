@@ -1,3 +1,4 @@
+using Meccano.DynamicQuery;
 using Microsoft.AspNetCore.Mvc;
 using SearchChooserAPI.Models.Req;
 using SearchChooserAPI.Models.Res;
@@ -17,7 +18,7 @@ namespace SearchChooserAPI.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(IEnumerable<DoctorSearchResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<DoctorSearchResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetDoctors([FromBody] DoctorSearchRequest request)
         {

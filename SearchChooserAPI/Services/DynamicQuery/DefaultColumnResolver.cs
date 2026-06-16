@@ -7,7 +7,7 @@ public class DefaultColumnResolver<TResponse> : IColumnResolver<TResponse>
 {
     public ResolvedColumns<TResponse> Resolve(List<string>? columns, ColumnMode mode)
     {
-        var allProperties = typeof(TResponse).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        var allProperties = typeof(TResponse).GetProperties(BindingFlags.Public|BindingFlags.NonPublic | BindingFlags.Instance);
         var allNames = allProperties.Select(p => p.Name).ToList();
         var validNames = new HashSet<string>(allNames, StringComparer.OrdinalIgnoreCase);
 
@@ -16,7 +16,7 @@ public class DefaultColumnResolver<TResponse> : IColumnResolver<TResponse>
         var invalid = inputColumns.Where(c => !validNames.Contains(c)).ToList();
         if (invalid.Count != 0)
             throw new ArgumentException(
-                $"Invalid column(s): {string.Join(", ", invalid)}. " +
+                $"Invalid column(s): {string.Join(", ", invalid)}." +
                 $"Valid columns are: {string.Join(", ", allNames)}");
 
         var resolved = mode == ColumnMode.Exclude
