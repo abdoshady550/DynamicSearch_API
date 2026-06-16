@@ -8,7 +8,7 @@ public static class DynamicQueryExtensions
     public static IQueryable<TResult> SelectColumns<TResult>(this IQueryable<TResult> query,IDynamicQueryRequest<TResult> request)
         where TResult : class, new()
     {
-        var resolved = request.ColumnResolver.Resolve(request.Columns, request.Mode);
+        var resolved = ColumnResolver.Resolve<TResult>(request.Columns, request.Mode);
 
         var parameter = Expression.Parameter(typeof(TResult), "x");
         var bindings = resolved.Properties

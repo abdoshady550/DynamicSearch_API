@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace Meccano.DynamicQuery;
 
 public abstract class DynamicQueryRequest<TResponse> : IDynamicQueryRequest<TResponse>
@@ -11,7 +9,4 @@ public abstract class DynamicQueryRequest<TResponse> : IDynamicQueryRequest<TRes
     public List<FilterCriteria>? Filters { get; set; }
     public int PageNumber { get; set; } = 1;
     public int PageSize { get; set; } = 20;
-
-    [JsonIgnore]
-    public virtual IColumnResolver<TResponse> ColumnResolver { get; set; } = new DefaultColumnResolver<TResponse>();
 }

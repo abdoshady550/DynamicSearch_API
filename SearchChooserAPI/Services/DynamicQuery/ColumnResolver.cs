@@ -2,12 +2,12 @@ using System.Reflection;
 
 namespace Meccano.DynamicQuery;
 
-public class DefaultColumnResolver<TResponse> : IColumnResolver<TResponse>
-    where TResponse : class
+public static class ColumnResolver
 {
-    public ResolvedColumns<TResponse> Resolve(List<string>? columns, ColumnMode mode)
+    public static ResolvedColumns<TResponse> Resolve<TResponse>(List<string>? columns, ColumnMode mode)
+        where TResponse : class
     {
-        var allProperties = typeof(TResponse).GetProperties(BindingFlags.Public|BindingFlags.NonPublic | BindingFlags.Instance);
+        var allProperties = typeof(TResponse).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         var allNames = allProperties.Select(p => p.Name).ToList();
         var validNames = new HashSet<string>(allNames, StringComparer.OrdinalIgnoreCase);
 

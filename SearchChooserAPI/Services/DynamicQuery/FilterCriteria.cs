@@ -10,9 +10,9 @@ public class FilterCriteria
 
 public enum FilterOperator
 {
-    Eq,
-    Neq,
-    Gt,
-    Lt,
-    Range
+    Eq=0,
+    Neq=1,
+    Gt=2,
+    Lt=3,
+    Range=4
 }

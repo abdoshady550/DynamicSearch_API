@@ -54,7 +54,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference(options =>
     {
         options.WithTitle("Dynamic Search Chooser API Reference")
-               .WithTheme(ScalarTheme.Solarized)
+                .WithTheme(ScalarTheme.Mars)
                .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
     });
     app.UseSwaggerUI(options =>
