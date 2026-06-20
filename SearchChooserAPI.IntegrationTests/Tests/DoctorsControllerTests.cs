@@ -664,4 +664,226 @@ public sealed class DoctorsControllerTests : IClassFixture<SearchApiFactory>, IA
             d.Rating.Should().BeGreaterThan(0);
         });
     }
+
+    // ========================================================================
+    // SORTING
+    // ========================================================================
+
+    [Fact(DisplayName = "SORT1: Single column ascending by Rating")]
+    public async Task SortByRatingAscending()
+    {
+        var request = new DoctorSearchRequestBuilder()
+            .AddSort("Rating", isDescending: false);
+
+        var data = await AssertSuccessAsync(request, 12);
+        data.Should().BeInAscendingOrder(d => d.Rating);
+        data[0].Rating.Should().Be(3.2m);
+        data[^1].Rating.Should().Be(4.9m);
+    }
+
+    [Fact(DisplayName = "SORT2: Single column descending by Rating")]
+    public async Task SortByRatingDescending()
+    {
+        var request = new DoctorSearchRequestBuilder()
+            .AddSort("Rating", isDescending: true);
+
+        var data = await AssertSuccessAsync(request, 12);
+        data.Should().BeInDescendingOrder(d => d.Rating);
+    }
+
+    [Fact(DisplayName = "SORT3: Single column ascending by YearsOfExperience")]
+    public async Task SortByExperienceAscending()
+    {
+        var request = new DoctorSearchRequestBuilder()
+            .AddSort("YearsOfExperience");
+
+        var data = await AssertSuccessAsync(request, 12);
+        data.Should().BeInAscendingOrder(d => d.YearsOfExperience);
+        data[0].YearsOfExperience.Should().Be(3);
+        data[^1].YearsOfExperience.Should().Be(22);
+    }
+
+    [Fact(DisplayName = "SORT4: Single column descending by DoctorName")]
+    public async Task SortByNameDescending()
+    {
+        var request = new DoctorSearchRequestBuilder()
+            .AddSort("DoctorName", isDescending: true);
+
+        var data = await AssertSuccessAsync(request, 12);
+        data.Should().BeInDescendingOrder(d => d.DoctorName);
+        data[0].DoctorName.Should().Be("Dr. Sarah Jenkins");
+        data[^1].DoctorName.Should().Be("Dr. Ahmed Hassan");
+    }
+
+    [Fact(DisplayName = "SORT5: Single column ascending by DoctorName")]
+    public async Task SortByNameAscending()
+    {
+        var request = new DoctorSearchRequestBuilder()
+            .AddSort("DoctorName");
+
+        var data = await AssertSuccessAsync(request, 12);
+        data.Should().BeInAscendingOrder(d => d.DoctorName);
+        data[0].DoctorName.Should().Be("Dr. Ahmed Hassan");
+        data[^1].DoctorName.Should().Be("Dr. Sarah Jenkins");
+    }
+
+    [Fact(DisplayName = "SORT6: Single column ascending by JoinDate")]
+    public async Task SortByJoinDateAscending()
+    {
+        var request = new DoctorSearchRequestBuilder()
+            .AddSort("JoinDate");
+
+        var data = await AssertSuccessAsync(request, 12);
+        data.Should().BeInAscendingOrder(d => d.JoinDate);
+        data[0].JoinDate.Should().Be(new DateTime(2004, 3, 10));
+        data[^1].JoinDate.Should().Be(new DateTime(2023, 4, 1));
+    }
+
+    [Fact(DisplayName = "SORT7: Single column descending by JoinDate")]
+    public async Task SortByJoinDateDescending()
+    {
+        var request = new DoctorSearchRequestBuilder()
+            .AddSort("JoinDate", isDescending: true);
+
+        var data = await AssertSuccessAsync(request, 12);
+        data.Should().BeInDescendingOrder(d => d.JoinDate);
+        data[0].JoinDate.Should().Be(new DateTime(2023, 4, 1));
+        data[^1].JoinDate.Should().Be(new DateTime(2004, 3, 10));
+    }
+
+    [Fact(DisplayName = "SORT8: Multi-column sort by SpecialtyName ASC then Rating DESC")]
+    public async Task SortBySpecialtyThenRatingDesc()
+    {
+        var request = new DoctorSearchRequestBuilder()
+            .AddSort("SpecialtyName")
+            .AddSort("Rating", isDescending: true);
+
+        var data = await AssertSuccessAsync(request, 12);
+
+        data.Should().BeInAscendingOrder(d => d.SpecialtyName);
+
+        // Within each specialty, ratings should be descending
+        var cardio = data.Where(d => d.SpecialtyName == "Cardiology").ToList();
+        cardio.Should().BeInDescendingOrder(d => d.Rating);
+
+        var derm = data.Where(d => d.SpecialtyName == "Dermatology").ToList();
+        derm.Should().BeInDescendingOrder(d => d.Rating);
+
+        var neuro = data.Where(d => d.SpecialtyName == "Neurology").ToList();
+        neuro.Should().BeInDescendingOrder(d => d.Rating);
+    }
+
+    [Fact(DisplayName = "SORT9: Multi-column sort by SpecialtyName DESC then Rating ASC")]
+    public async Task SortBySpecialtyDescThenRatingAsc()
+    {
+        var request = new DoctorSearchRequestBuilder()
+            .AddSort("SpecialtyName", isDescending: true)
+            .AddSort("Rating");
+
+        var data = await AssertSuccessAsync(request, 12);
+
+        data.Should().BeInDescendingOrder(d => d.SpecialtyName);
+
+        var radio = data.Where(d => d.SpecialtyName == "Radiology").ToList();
+        radio.Should().BeInAscendingOrder(d => d.Rating);
+    }
+
+    [Fact(DisplayName = "SORT10: Invalid sort property is silently ignored")]
+    public async Task SortByInvalidProperty_ReturnsAll()
+    {
+        var request = new DoctorSearchRequestBuilder()
+            .AddSort("NonExistentColumn");
+
+        var data = await AssertSuccessAsync(request, 12);
+        data.Should().HaveCount(12);
+    }
+
+    [Fact(DisplayName = "SORT11: Empty sort options returns all doctors")]
+    public async Task EmptySortOptions_ReturnsAll()
+    {
+        var request = new DoctorSearchRequestBuilder()
+            .WithSortOptions();
+
+        var data = await AssertSuccessAsync(request, 12);
+        data.Should().HaveCount(12);
+    }
+
+    [Fact(DisplayName = "SORT12: Null sort options returns all doctors (default)")]
+    public async Task NullSortOptions_ReturnsAll()
+    {
+        var request = new DoctorSearchRequestBuilder();
+        var data = await AssertSuccessAsync(request, 12);
+        data.Should().HaveCount(12);
+    }
+
+    [Fact(DisplayName = "SORT13: Sort preserves total count")]
+    public async Task SortPreservesTotalCount()
+    {
+        var defaultReq = new DoctorSearchRequest();
+        var defaultContent = JsonContent.Create(defaultReq, options: new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        var defaultResponse = await _client.PostAsync("/api/Doctors", defaultContent);
+        var defaultJson = await defaultResponse.Content.ReadAsStringAsync();
+        var defaultPaged = JsonSerializer.Deserialize<PagedResult<DoctorSearchResponse>>(defaultJson, _jsonOptions);
+
+        var sortedReq = new DoctorSearchRequestBuilder()
+            .AddSort("Rating", isDescending: true)
+            .Build();
+        var sortedContent = JsonContent.Create(sortedReq, options: new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        var sortedResponse = await _client.PostAsync("/api/Doctors", sortedContent);
+        var sortedJson = await sortedResponse.Content.ReadAsStringAsync();
+        var sortedPaged = JsonSerializer.Deserialize<PagedResult<DoctorSearchResponse>>(sortedJson, _jsonOptions);
+
+        sortedPaged!.TotalCount.Should().Be(defaultPaged!.TotalCount);
+        sortedPaged.TotalCount.Should().Be(12);
+    }
+
+    [Fact(DisplayName = "SORT14: Sort with pagination returns correct page in correct order")]
+    public async Task SortWithPagination()
+    {
+        var request = new DoctorSearchRequestBuilder()
+            .AddSort("Rating")
+            .Build();
+        request.PageNumber = 1;
+        request.PageSize = 5;
+
+        var content = JsonContent.Create(request, options: new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        var response = await _client.PostAsync("/api/Doctors", content);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var json = await response.Content.ReadAsStringAsync();
+        var paged = JsonSerializer.Deserialize<PagedResult<DoctorSearchResponse>>(json, _jsonOptions);
+
+        paged!.Items.Should().HaveCount(5);
+        paged.TotalCount.Should().Be(12);
+        paged.PageNumber.Should().Be(1);
+        paged.PageSize.Should().Be(5);
+        paged.Items.Should().BeInAscendingOrder(d => d.Rating);
+        paged.Items[0].Rating.Should().Be(3.2m);
+        paged.Items[^1].Rating.Should().Be(4.3m);
+    }
+
+    [Fact(DisplayName = "SORT15: Sort by case-insensitive property name")]
+    public async Task SortByCaseInsensitivePropertyName()
+    {
+        var request = new DoctorSearchRequestBuilder()
+            .AddSort("rating", isDescending: true);
+
+        var data = await AssertSuccessAsync(request, 12);
+        data.Should().BeInDescendingOrder(d => d.Rating);
+    }
+
+    [Fact(DisplayName = "SORT16: Sort with filtered results")]
+    public async Task SortWithFilteredResults()
+    {
+        var request = new DoctorSearchRequestBuilder()
+            .AddFilter("SpecialtyName", FilterOperator.Eq, "Cardiology")
+            .AddSort("Rating", isDescending: true);
+
+        var data = await AssertSuccessAsync(request, 2);
+        data.Should().HaveCount(2);
+        data.Should().BeInDescendingOrder(d => d.Rating);
+        data[0].Rating.Should().Be(4.8m);
+        data[1].Rating.Should().Be(4.6m);
+        data.Should().AllSatisfy(d => d.SpecialtyName.Should().Be("Cardiology"));
+    }
 }

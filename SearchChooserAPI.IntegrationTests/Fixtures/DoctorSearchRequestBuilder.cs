@@ -47,6 +47,23 @@ public class DoctorSearchRequestBuilder
         return this;
     }
 
+    public DoctorSearchRequestBuilder WithSortOptions(params SortOption[] sortOptions)
+    {
+        _request.SortOptions = sortOptions.ToList();
+        return this;
+    }
+
+    public DoctorSearchRequestBuilder AddSort(string propertyName, bool isDescending = false)
+    {
+        _request.SortOptions ??= new List<SortOption>();
+        _request.SortOptions.Add(new SortOption
+        {
+            PropertyName = propertyName,
+            IsDescending = isDescending
+        });
+        return this;
+    }
+
     public DoctorSearchRequest Build() => _request;
 
     public JsonContent BuildJsonContent() =>
