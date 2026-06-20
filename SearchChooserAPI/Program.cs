@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using SearchChooserAPI.Data;
 using SearchChooserAPI.Services;
+using SearchChooserAPI.Services.AI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,15 @@ builder.Services.AddDbContext<SearchDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IDoctorService, DoctorService>();
+
+// AI Query Service
+builder.Services.Configure<LmStudioOptions>(builder.Configuration.GetSection("LmStudio"));
+builder.Services.AddHttpClient<ILmStudioService, LmStudioService>((sp, client) =>
+{
+    var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<LmStudioOptions>>().Value;
+    client.BaseAddress = new Uri(options.BaseUrl.TrimEnd('/'));
+        client.Timeout = TimeSpan.FromMinutes(3);
+});
 
 builder.Services.AddOpenApi();
 
