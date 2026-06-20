@@ -6,4 +6,5 @@ public interface IDynamicQueryRequest<TResponse> where TResponse : class
     ColumnMode Mode { get; set; }
     string? Search { get; set; }
     List<FilterCriteria>? Filters { get; set; }
+    List<SortOption>? SortOptions { get; set; }
 }

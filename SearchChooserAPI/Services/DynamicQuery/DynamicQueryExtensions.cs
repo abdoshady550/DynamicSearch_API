@@ -171,13 +171,53 @@ public static class DynamicQueryExtensions
         return query.DynamicSearch(term).DynamicFilter(filters);
     }
 
+    public static IQueryable<T> ApplySorting<T>(this IQueryable<T> query, List<SortOption>? sortOptions)
+    {
+        if (sortOptions == null || sortOptions.Count == 0)
+            return query;
+
+        var type = typeof(T);
+        var parameter = Expression.Parameter(type, "x");
+        var isFirstSort = true;
+
+        foreach (var sortOption in sortOptions)
+        {
+            var property = type.GetProperty(sortOption.PropertyName,
+                BindingFlags.IgnoreCase | BindingFlags.Public |  BindingFlags.NonPublic | BindingFlags.Instance);
+
+            if (property == null)
+                continue;
+
+            var propertyAccess = Expression.MakeMemberAccess(parameter, property);
+            var lambda = Expression.Lambda(propertyAccess, parameter);
+
+            var methodName = sortOption.IsDescending
+                ? (isFirstSort ? "OrderByDescending" : "ThenByDescending")
+                : (isFirstSort ? "OrderBy" : "ThenBy");
+
+            isFirstSort = false;
+
+            var methodCallExpression = Expression.Call(
+                typeof(Queryable),
+                methodName,
+                [type, property.PropertyType],
+                query.Expression,
+                Expression.Quote(lambda));
+
+            query = query.Provider.CreateQuery<T>(methodCallExpression);
+        }
+
+        return query;
+    }
+
     public static IQueryable<TResult> ApplyDynamicQuery<TResult>(
         this IQueryable<TResult> query, IDynamicQueryRequest<TResult> request)
         where TResult : class, new()
     {
         return query
             .SelectColumns(request)
-            .DynamicSearchAndFilter(request.Search, request.Filters);
+            .DynamicSearchAndFilter(request.Search, request.Filters)
+            .ApplySorting(request.SortOptions);
     }
 
     private static List<string> GetSelectedProperties<T>(Expression expression)

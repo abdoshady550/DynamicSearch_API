@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>SearchChooserAPI.Benchmarks.Benchmarks.QuickComparisonBenchmarks-20260616-160224</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.26200.8655)
+Unknown processor
+.NET SDK 10.0.301
+  [Host]     : .NET 10.0.9 (10.0.926.27113), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+  Job-NBZTAO : .NET 10.0.9 (10.0.926.27113), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+</code></pre>
+<pre><code>PowerPlanMode=00000000-0000-0000-0000-000000000000  IterationCount=5  MaxIterationCount=7  
+MinIterationCount=3  WarmupCount=2  
+</code></pre>
+
+<table>
+<thead><tr><th>Method                     </th><th>Provider </th><th>Mean</th><th>Error</th><th>StdDev</th><th>Median</th><th>Op/s</th><th>Gen0</th><th>Gen1</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>&#39;Get all doctors&#39;</td><td>InMemory</td><td>36.90 ms</td><td>2.442 ms</td><td>0.378 ms</td><td>37.06 ms</td><td>27.103</td><td>3076.9231</td><td>76.9231</td><td>38112.33 KB</td>
+</tr><tr><td>&#39;Search by first name&#39;</td><td>InMemory</td><td>321.83 ms</td><td>17.432 ms</td><td>2.698 ms</td><td>321.50 ms</td><td>3.107</td><td>23000.0000</td><td>1000.0000</td><td>289390.95 KB</td>
+</tr><tr><td>&#39;Filter YearsOfExperience &gt; 10&#39;</td><td>InMemory</td><td>25.23 ms</td><td>7.745 ms</td><td>2.011 ms</td><td>24.35 ms</td><td>39.643</td><td>2250.0000</td><td>125.0000</td><td>27784.13 KB</td>
+</tr><tr><td>&#39;Filter Rating range 2.0-4.0&#39;</td><td>InMemory</td><td>16.58 ms</td><td>4.794 ms</td><td>0.742 ms</td><td>16.93 ms</td><td>60.302</td><td>1656.2500</td><td>31.2500</td><td>20438.42 KB</td>
+</tr><tr><td>&#39;Include 3 columns&#39;</td><td>InMemory</td><td>27.44 ms</td><td>0.614 ms</td><td>0.095 ms</td><td>27.44 ms</td><td>36.441</td><td>2906.2500</td><td>31.2500</td><td>35667.35 KB</td>
+</tr><tr><td>&#39;Full: search + filter + include&#39;</td><td>InMemory</td><td>47.56 ms</td><td>6.850 ms</td><td>1.060 ms</td><td>47.65 ms</td><td>21.028</td><td>4916.6667</td><td>83.3333</td><td>60357.96 KB</td>
+</tr><tr><td>&#39;Get all doctors&#39;</td><td>SqlServerDocker</td><td>28.99 ms</td><td>3.155 ms</td><td>0.819 ms</td><td>29.08 ms</td><td>34.489</td><td>62.5000</td><td>62.5000</td><td>1094.74 KB</td>
+</tr><tr><td>&#39;Search by first name&#39;</td><td>SqlServerDocker</td><td>80.00 ms</td><td>12.261 ms</td><td>3.184 ms</td><td>78.87 ms</td><td>12.500</td><td>-</td><td>-</td><td>97.34 KB</td>
+</tr><tr><td>&#39;Filter YearsOfExperience &gt; 10&#39;</td><td>SqlServerDocker</td><td>20.97 ms</td><td>1.156 ms</td><td>0.300 ms</td><td>20.97 ms</td><td>47.694</td><td>62.5000</td><td>62.5000</td><td>865.45 KB</td>
+</tr><tr><td>&#39;Filter Rating range 2.0-4.0&#39;</td><td>SqlServerDocker</td><td>18.93 ms</td><td>1.279 ms</td><td>0.332 ms</td><td>18.90 ms</td><td>52.823</td><td>31.2500</td><td>31.2500</td><td>683.82 KB</td>
+</tr><tr><td>&#39;Include 3 columns&#39;</td><td>SqlServerDocker</td><td>26.09 ms</td><td>14.760 ms</td><td>3.833 ms</td><td>25.22 ms</td><td>38.323</td><td>62.5000</td><td>62.5000</td><td>826.07 KB</td>
+</tr><tr><td>&#39;Full: search + filter + include&#39;</td><td>SqlServerDocker</td><td>28.08 ms</td><td>6.065 ms</td><td>1.575 ms</td><td>28.23 ms</td><td>35.614</td><td>-</td><td>-</td><td>803.46 KB</td>
+</tr><tr><td>&#39;Get all doctors&#39;</td><td>LocalSqlServer</td><td>35.71 ms</td><td>17.615 ms</td><td>4.575 ms</td><td>32.95 ms</td><td>28.007</td><td>76.9231</td><td>-</td><td>949.6 KB</td>
+</tr><tr><td>&#39;Search by first name&#39;</td><td>LocalSqlServer</td><td>109.38 ms</td><td>11.875 ms</td><td>3.084 ms</td><td>108.67 ms</td><td>9.143</td><td>-</td><td>-</td><td>90.08 KB</td>
+</tr><tr><td>&#39;Filter YearsOfExperience &gt; 10&#39;</td><td>LocalSqlServer</td><td>35.96 ms</td><td>7.040 ms</td><td>1.089 ms</td><td>36.32 ms</td><td>27.810</td><td>-</td><td>-</td><td>719.59 KB</td>
+</tr><tr><td>&#39;Filter Rating range 2.0-4.0&#39;</td><td>LocalSqlServer</td><td>25.54 ms</td><td>10.815 ms</td><td>2.809 ms</td><td>26.28 ms</td><td>39.160</td><td>31.2500</td><td>-</td><td>535.34 KB</td>
+</tr><tr><td>&#39;Include 3 columns&#39;</td><td>LocalSqlServer</td><td>21.29 ms</td><td>1.969 ms</td><td>0.511 ms</td><td>21.08 ms</td><td>46.964</td><td>62.5000</td><td>31.2500</td><td>767.78 KB</td>
+</tr><tr><td>&#39;Full: search + filter + include&#39;</td><td>LocalSqlServer</td><td>34.71 ms</td><td>2.545 ms</td><td>0.661 ms</td><td>34.85 ms</td><td>28.811</td><td>-</td><td>-</td><td>686.86 KB</td>
+</tr></tbody></table>
+</body>
+</html>

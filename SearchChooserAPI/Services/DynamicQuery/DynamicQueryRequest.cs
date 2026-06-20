@@ -7,6 +7,7 @@ public abstract class DynamicQueryRequest<TResponse> : IDynamicQueryRequest<TRes
     public ColumnMode Mode { get; set; } = ColumnMode.Include;
     public string? Search { get; set; }
     public List<FilterCriteria>? Filters { get; set; }
+    public List<SortOption>? SortOptions { get; set; }
     public int PageNumber { get; set; } = 1;
     public int PageSize { get; set; } = 20;
 }
