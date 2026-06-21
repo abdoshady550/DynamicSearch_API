@@ -1,18 +1,27 @@
+using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OData.ModelBuilder;
 using Scalar.AspNetCore;
 using SearchChooserAPI.Data;
+using SearchChooserAPI.Models.Res;
 using SearchChooserAPI.Services;
 using SearchChooserAPI.Services.AI;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var odataBuilder = new ODataConventionModelBuilder();
+var doctorsEntity = odataBuilder.EntitySet<DoctorSearchResponse>("DoctorsOData").EntityType;
+doctorsEntity.HasKey(d => d.DoctorId);
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.DefaultIgnoreCondition =
             System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
-    });
+    })
+    .AddOData(options => options.Select().Filter().OrderBy().Count().SetMaxTop(null)
+        .AddRouteComponents("odata", odataBuilder.GetEdmModel()));
 
 // Configure SQL Server
 builder.Services.AddDbContext<SearchDbContext>(options =>

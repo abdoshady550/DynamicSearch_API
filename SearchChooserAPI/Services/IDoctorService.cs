@@ -7,5 +7,7 @@ namespace SearchChooserAPI.Services
     public interface IDoctorService
     {
         Task<PagedResult<DoctorSearchResponse>> SearchDoctorsAsync(DoctorSearchRequest request);
+
+        IQueryable<DoctorSearchResponse> GetDoctorsQuery();
     }
 }

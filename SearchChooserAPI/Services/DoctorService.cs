@@ -15,6 +15,22 @@ namespace SearchChooserAPI.Services
             _context = context;
         }
 
+        public IQueryable<DoctorSearchResponse> GetDoctorsQuery()
+        {
+            return _context.Doctors
+                .Select(d => new DoctorSearchResponse
+                {
+                    DoctorId = d.Id.ToString(),
+                    DoctorName = d.DoctorTranslations.Where(t => t.Language == "en").Select(t => t.Name).FirstOrDefault(),
+                    SpecialtyName = d.Specialty.SpecialtyTranslations.Where(t => t.Language == "en").Select(t => t.Name).FirstOrDefault(),
+                    Degree = d.Degree.DegreeTranslations.Where(t => t.Language == "en").Select(t => t.Name).FirstOrDefault(),
+                    YearsOfExperience = d.YearsOfExperience,
+                    Rating = d.Rating,
+                    JoinDate = d.JoinDate,
+                    LastActive = d.LastActive
+                });
+        }
+
         public async Task<PagedResult<DoctorSearchResponse>> SearchDoctorsAsync(DoctorSearchRequest request)
         {
             var query = _context.Doctors
