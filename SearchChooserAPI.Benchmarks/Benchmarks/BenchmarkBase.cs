@@ -17,13 +17,13 @@ public abstract class BenchmarkBase
     protected IDoctorService _service = null!;
     protected BenchmarkContext _context = null!;
 
-    [Params(BenchmarkProvider.InMemory, BenchmarkProvider.SqlServerDocker, BenchmarkProvider.LocalSqlServer)]
+    [Params( BenchmarkProvider.LocalSqlServer)]
     public BenchmarkProvider Provider { get; set; }
 
     [ParamsSource(nameof(DataSizes))]
     public int DataSize { get; set; }
 
-    public static IEnumerable<int> DataSizes() => [100, 1000, 10000, 100000];
+    public static IEnumerable<int> DataSizes() => [1000];
 
     [GlobalSetup]
     public async Task GlobalSetup()

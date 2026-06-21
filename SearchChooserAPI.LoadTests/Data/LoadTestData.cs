@@ -106,6 +106,49 @@ public static class LoadTestData
         ]
     };
 
+    // === COMPLEX SCENARIOS ===
+
+    public static readonly DoctorSearchRequest ComplexARequest = new()
+    {
+        PageSize = 10,
+        PageNumber = 2,
+        Columns = ["DoctorId", "DoctorName", "SpecialtyName", "YearsOfExperience", "Rating"],
+        Mode = ColumnMode.Include,
+        SortOptions =
+        [
+            new SortOption { PropertyName = "SpecialtyName", IsDescending = false },
+            new SortOption { PropertyName = "Rating", IsDescending = true }
+        ]
+    };
+
+    public static readonly DoctorSearchRequest ComplexBRequest = new()
+    {
+        PageSize = 5,
+        PageNumber = 1,
+        Columns = ["DoctorId", "DoctorName", "YearsOfExperience", "Rating"],
+        Mode = ColumnMode.Include,
+        Filters =
+        [
+            new FilterCriteria { ColumnName = "YearsOfExperience", Operator = FilterOperator.Gt, Value = "5" },
+            new FilterCriteria { ColumnName = "Rating", Operator = FilterOperator.Gt, Value = "3.0" }
+        ],
+        SortOptions =
+        [
+            new SortOption { PropertyName = "Rating", IsDescending = true }
+        ]
+    };
+
+    public static readonly DoctorSearchRequest ComplexCRequest = new()
+    {
+        PageSize = 10,
+        PageNumber = 1,
+        Search = "Cardiology",
+        Filters =
+        [
+            new FilterCriteria { ColumnName = "YearsOfExperience", Operator = FilterOperator.Gt, Value = "10" }
+        ]
+    };
+
     public static readonly IReadOnlyList<DoctorSearchRequest> AllRequests =
     [
         GetAllDoctorsRequest,
@@ -114,6 +157,13 @@ public static class LoadTestData
         IncludeColumnsRequest,
         MultiFilterRequest,
         FullPipelineRequest
+    ];
+
+    public static readonly IReadOnlyList<DoctorSearchRequest> AllComplexRequests =
+    [
+        ComplexARequest,
+        ComplexBRequest,
+        ComplexCRequest
     ];
 
     public static DoctorSearchRequest RandomRequest()

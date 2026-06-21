@@ -32,7 +32,11 @@ if (argsList.Contains("--help") || argsList.Contains("-h"))
     Console.WriteLine("  --scenario, -s <name> Specific scenario to run (default: all)");
     Console.WriteLine("  --help, -h            Show this help");
     Console.WriteLine();
-    Console.WriteLine("Scenarios: get_all_doctors, search_by_name, filter_by_experience, random_workload, mixed_workload");
+    Console.WriteLine("Scenarios: get_all_doctors, search_by_name, filter_by_experience, random_workload, mixed_workload,");
+    Console.WriteLine("          complex_a, complex_b, complex_c,");
+    Console.WriteLine("          odata_get_all_doctors, odata_search_by_name, odata_filter_by_experience,");
+    Console.WriteLine("          odata_complex_a, odata_complex_b, odata_complex_c,");
+    Console.WriteLine("          odata_random_workload, odata_mixed_workload");
     return 0;
 }
 
@@ -85,6 +89,39 @@ if (scenarioName is null || scenarioName == "random_workload")
 
 if (scenarioName is null || scenarioName == "mixed_workload")
     scenarios.Add(DoctorScenarios.CreateMixedScenario(httpClient, baseUrl));
+
+if (scenarioName is null || scenarioName == "complex_a")
+    scenarios.Add(DoctorScenarios.CreateComplexAScenario(httpClient, baseUrl));
+
+if (scenarioName is null || scenarioName == "complex_b")
+    scenarios.Add(DoctorScenarios.CreateComplexBScenario(httpClient, baseUrl));
+
+if (scenarioName is null || scenarioName == "complex_c")
+    scenarios.Add(DoctorScenarios.CreateComplexCScenario(httpClient, baseUrl));
+
+if (scenarioName is null || scenarioName == "odata_get_all_doctors")
+    scenarios.Add(DoctorScenarios.CreateODataGetAllDoctorsScenario(httpClient, baseUrl));
+
+if (scenarioName is null || scenarioName == "odata_search_by_name")
+    scenarios.Add(DoctorScenarios.CreateODataSearchByNameScenario(httpClient, baseUrl));
+
+if (scenarioName is null || scenarioName == "odata_filter_by_experience")
+    scenarios.Add(DoctorScenarios.CreateODataFilterByExperienceScenario(httpClient, baseUrl));
+
+if (scenarioName is null || scenarioName == "odata_complex_a")
+    scenarios.Add(DoctorScenarios.CreateODataComplexAScenario(httpClient, baseUrl));
+
+if (scenarioName is null || scenarioName == "odata_complex_b")
+    scenarios.Add(DoctorScenarios.CreateODataComplexBScenario(httpClient, baseUrl));
+
+if (scenarioName is null || scenarioName == "odata_complex_c")
+    scenarios.Add(DoctorScenarios.CreateODataComplexCScenario(httpClient, baseUrl));
+
+if (scenarioName is null || scenarioName == "odata_random_workload")
+    scenarios.Add(DoctorScenarios.CreateODataRandomWorkloadScenario(httpClient, baseUrl));
+
+if (scenarioName is null || scenarioName == "odata_mixed_workload")
+    scenarios.Add(DoctorScenarios.CreateODataMixedScenario(httpClient, baseUrl));
 
 if (scenarios.Count == 0)
 {

@@ -8,7 +8,8 @@ var switcher = new BenchmarkSwitcher(
     typeof(ProjectionBenchmarks),
     typeof(CombinedBenchmarks),
     typeof(QuickComparisonBenchmarks),
-    typeof(FairSqlServerBenchmarks)
+    typeof(FairSqlServerBenchmarks),
+    typeof(DoctorsControllerVsODataBenchmarks)
 ]);
 
 Console.WriteLine("==============================================================");
@@ -23,6 +24,7 @@ Console.WriteLine("  3: ProjectionBenchmarks");
 Console.WriteLine("  4: CombinedBenchmarks");
 Console.WriteLine("  5: QuickComparisonBenchmarks  (fast! ~2 min, 3 providers @ 1000 rows)");
 Console.WriteLine("  6: FairSqlServerBenchmarks    (fair comparison! Local vs Docker SQL Server)");
+Console.WriteLine("  7: DoctorsControllerVsODataBenchmarks    (Dynamic vs OData comparison)");
 Console.WriteLine();
 Console.WriteLine("Providers (selectable per type via --filter):");
 Console.WriteLine("  - EF Core InMemory");
