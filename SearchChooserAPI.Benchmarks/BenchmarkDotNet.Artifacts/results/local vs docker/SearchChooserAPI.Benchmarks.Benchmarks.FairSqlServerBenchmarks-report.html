@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>SearchChooserAPI.Benchmarks.Benchmarks.FairSqlServerBenchmarks-20260621-133128</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.26200.8655)
+Unknown processor
+.NET SDK 10.0.301
+  [Host]     : .NET 10.0.9 (10.0.926.27113), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+  Job-VGBJBW : .NET 10.0.9 (10.0.926.27113), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+</code></pre>
+<pre><code>PowerPlanMode=00000000-0000-0000-0000-000000000000  IterationCount=5  MaxIterationCount=7  
+MinIterationCount=3  WarmupCount=2  
+</code></pre>
+
+<table>
+<thead><tr><th>Method                     </th><th>Provider </th><th>Mean</th><th>Error</th><th>StdDev</th><th>Median</th><th>Op/s</th><th>Gen0</th><th>Gen1</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>&#39;Get all doctors&#39;</td><td>SqlServerDocker</td><td>21.878 ms</td><td>5.375 ms</td><td>0.8318 ms</td><td>21.724 ms</td><td>45.71</td><td>62.5000</td><td>62.5000</td><td>1094.59 KB</td>
+</tr><tr><td>&#39;Search by first name&#39;</td><td>SqlServerDocker</td><td>43.880 ms</td><td>10.266 ms</td><td>1.5887 ms</td><td>43.761 ms</td><td>22.79</td><td>-</td><td>-</td><td>97.88 KB</td>
+</tr><tr><td>&#39;Filter YearsOfExperience &gt; 10&#39;</td><td>SqlServerDocker</td><td>14.085 ms</td><td>2.235 ms</td><td>0.5804 ms</td><td>14.012 ms</td><td>71.00</td><td>62.5000</td><td>62.5000</td><td>865.45 KB</td>
+</tr><tr><td>&#39;Filter Rating range 2.0-4.0&#39;</td><td>SqlServerDocker</td><td>12.374 ms</td><td>6.693 ms</td><td>1.7381 ms</td><td>12.085 ms</td><td>80.82</td><td>46.8750</td><td>46.8750</td><td>683.97 KB</td>
+</tr><tr><td>&#39;Include 3 columns&#39;</td><td>SqlServerDocker</td><td>13.557 ms</td><td>3.376 ms</td><td>0.8767 ms</td><td>13.090 ms</td><td>73.76</td><td>62.5000</td><td>62.5000</td><td>825.63 KB</td>
+</tr><tr><td>&#39;Full: search + filter + include&#39;</td><td>SqlServerDocker</td><td>18.654 ms</td><td>5.106 ms</td><td>1.3259 ms</td><td>18.382 ms</td><td>53.61</td><td>62.5000</td><td>62.5000</td><td>803.46 KB</td>
+</tr><tr><td>&#39;Get all doctors&#39;</td><td>LocalSqlServer</td><td>15.263 ms</td><td>8.149 ms</td><td>2.1162 ms</td><td>14.442 ms</td><td>65.52</td><td>62.5000</td><td>31.2500</td><td>947.97 KB</td>
+</tr><tr><td>&#39;Search by first name&#39;</td><td>LocalSqlServer</td><td>49.502 ms</td><td>43.759 ms</td><td>6.7717 ms</td><td>50.152 ms</td><td>20.20</td><td>-</td><td>-</td><td>89.36 KB</td>
+</tr><tr><td>&#39;Filter YearsOfExperience &gt; 10&#39;</td><td>LocalSqlServer</td><td>13.029 ms</td><td>3.561 ms</td><td>0.9248 ms</td><td>13.299 ms</td><td>76.75</td><td>46.8750</td><td>-</td><td>718.26 KB</td>
+</tr><tr><td>&#39;Filter Rating range 2.0-4.0&#39;</td><td>LocalSqlServer</td><td>9.201 ms</td><td>2.465 ms</td><td>0.3814 ms</td><td>9.276 ms</td><td>108.69</td><td>31.2500</td><td>-</td><td>534.73 KB</td>
+</tr><tr><td>&#39;Include 3 columns&#39;</td><td>LocalSqlServer</td><td>9.563 ms</td><td>2.104 ms</td><td>0.5463 ms</td><td>9.717 ms</td><td>104.57</td><td>62.5000</td><td>15.6250</td><td>768.17 KB</td>
+</tr><tr><td>&#39;Full: search + filter + include&#39;</td><td>LocalSqlServer</td><td>18.636 ms</td><td>4.735 ms</td><td>0.7327 ms</td><td>18.725 ms</td><td>53.66</td><td>31.2500</td><td>-</td><td>686.7 KB</td>
+</tr></tbody></table>
+</body>
+</html>

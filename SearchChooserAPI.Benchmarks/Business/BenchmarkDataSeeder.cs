@@ -65,14 +65,14 @@ public static class BenchmarkDataSeeder
         "DDS (Doctor of Dental Surgery)"
     ];
 
-    private static readonly Random Rng = new(42);
-
     public static async Task SeedAsync(SearchDbContext context, int doctorCount, bool addIndexes = false)
     {
         context.Database.EnsureCreated();
 
         if (await context.Doctors.AnyAsync())
             return;
+
+        var rng = new Random(42);
 
         var specialties = CreateSpecialties();
         var degrees = CreateDegrees();
@@ -87,7 +87,7 @@ public static class BenchmarkDataSeeder
 
         for (var i = 0; i < doctorCount; i++)
         {
-            doctors.Add(CreateDoctor(i, specialties, degrees));
+            doctors.Add(CreateDoctor(i, specialties, degrees, rng));
             if (doctors.Count >= batchSize)
             {
                 context.Doctors.AddRange(doctors);
@@ -177,25 +177,25 @@ public static class BenchmarkDataSeeder
         }).ToList();
     }
 
-    private static Doctor CreateDoctor(int index, List<Specialty> specialties, List<Degree> degrees)
+    private static Doctor CreateDoctor(int index, List<Specialty> specialties, List<Degree> degrees, Random rng)
     {
         var id = Guid.NewGuid();
         var specialty = specialties[index % specialties.Count];
         var degree = degrees[index % degrees.Count];
-        var firstName = FirstNames[Rng.Next(FirstNames.Length)];
-        var lastName = LastNames[Rng.Next(LastNames.Length)];
+        var firstName = FirstNames[rng.Next(FirstNames.Length)];
+        var lastName = LastNames[rng.Next(LastNames.Length)];
 
-        var joinDate = new DateTime(2000 + Rng.Next(25), Rng.Next(1, 13), Rng.Next(1, 29));
+        var joinDate = new DateTime(2000 + rng.Next(25), rng.Next(1, 13), rng.Next(1, 29));
 
         return new Doctor
         {
             Id = id,
             SpecialtyId = specialty.Id,
             DegreeId = degree.Id,
-            YearsOfExperience = Rng.Next(0, 41),
-            Rating = Math.Round((decimal)(Rng.NextDouble() * 4.0 + 1.0), 1),
+            YearsOfExperience = rng.Next(0, 41),
+            Rating = Math.Round((decimal)(rng.NextDouble() * 4.0 + 1.0), 1),
             JoinDate = joinDate,
-            LastActive = joinDate.AddYears(Rng.Next(1, 5)).AddDays(Rng.Next(1, 365)),
+            LastActive = joinDate.AddYears(rng.Next(1, 5)).AddDays(rng.Next(1, 365)),
             DoctorTranslations = new List<DoctorTranslation>
             {
                 new()

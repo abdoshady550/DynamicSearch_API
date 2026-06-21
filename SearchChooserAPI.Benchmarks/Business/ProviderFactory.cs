@@ -91,6 +91,7 @@ public static class ProviderFactory
             .Options;
 
         var context = new SearchDbContext(options);
+        await context.Database.EnsureDeletedAsync();
         await BenchmarkDataSeeder.SeedAsync(context, dataSize, addIndexes: true);
 
         return new BenchmarkContext(context, new DoctorService(context));
